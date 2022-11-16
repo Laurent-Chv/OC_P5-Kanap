@@ -13,7 +13,6 @@ class Produit{
 class ProduitManager{
    constructor(listProduit){
        this.listProduit = listProduit;
-       return this.listProduit((a, b));
    }
 };
 
@@ -31,4 +30,6 @@ fetch("http://localhost:3000/api/products")
                                                                </a>
                                                                `;
       }
+
 });
+
