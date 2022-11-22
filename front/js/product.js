@@ -4,21 +4,63 @@
 var url = new URL(window.location);
 var search_params = new URLSearchParams(url.search); 
 if(search_params.has('id')) {
-   var idProduit = search_params.get('id');
+   var productId = search_params.get('id');
 }
 
-fetch("http://localhost:3000/api/products/" + idProduit)
+fetch("http://localhost:3000/api/products/" + productId)
    .then(data => data.json())
-   .then(jsonListProduit => {
+   .then(jsonListProduct => {
       document.querySelector(".item__img").innerHTML +=
-      `<img src="${jsonListProduit.imageUrl}" alt="${jsonListProduit.imageUrl}">`;
-      title.innerHTML += jsonListProduit.name;
-      price.innerHTML += jsonListProduit.price;
-      description.innerHTML += jsonListProduit.description;
-      for (let color of jsonListProduit.colors) {
+      `<img src="${jsonListProduct.imageUrl}" alt="${jsonListProduct.imageUrl}">`;
+      title.innerHTML += jsonListProduct.name;
+      price.innerHTML += jsonListProduct.price;
+      description.innerHTML += jsonListProduct.description;
+      for (let color of jsonListProduct.colors) {
          colors.innerHTML +=
          `<option value="${color}">${color}</option>`
       }
-
-      }
+   }
 );
+
+function addToCart(){
+   // localStorage.clear() //
+   let cartList = []
+   let productQuantity = document.getElementById("quantity")
+   let productColorsList = document.getElementById("colors")
+   let productKey = `${productId} ` +`${colors.value}`
+   let newItemJSON = {
+      id: productId,
+      quantity: productQuantity.value,
+      color: productColorsList.value,
+   };
+
+   let newProductQuantity = newItemJSON.quantity
+
+   if(localStorage.getItem(productKey)){
+      let currentProduct = JSON.parse(localStorage.getItem(productKey))
+      let currentProductQuantity = currentProduct[0].quantity
+      let productQuantityAdded = parseInt(currentProductQuantity) + parseInt(newProductQuantity)
+      newItemJSON = {
+         id: productId,
+         quantity: productQuantityAdded,
+         color: productColorsList.value
+      }
+      cartList.push(newItemJSON)
+      newItem = JSON.stringify(cartList)
+      localStorage.setItem(productKey, newItem)
+      console.log(localStorage) //
+   } else {
+      cartList.push(newItemJSON)
+      newItem = JSON.stringify(cartList)
+      localStorage.setItem(productKey, newItem)
+      console.log(localStorage) //
+   }
+
+}
+
+window.onload = function(){
+   let buttonAddToCart = document.getElementById("addToCart")
+   buttonAddToCart.addEventListener("click", addToCart, false)
+}
+
+
