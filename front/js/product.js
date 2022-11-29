@@ -26,9 +26,9 @@ function addToCart() {
    let cartList = []
    let productQuantity = document.getElementById("quantity")
    let productColorsList = document.getElementById("colors")
-   let productKey = `${productId} ` + `${colors.value}`
+   let productReference = `${productId} ` + `${colors.value}`
    let newItemJSON = {
-      key: productKey,
+      reference: productReference,
       id: productId,
       quantity: productQuantity.value,
       color: productColorsList.value,
@@ -36,26 +36,26 @@ function addToCart() {
 
    let newProductQuantity = newItemJSON.quantity
 
-   if (localStorage.getItem(productKey)) {
-      let currentProduct = JSON.parse(localStorage.getItem(productKey))
+   if (localStorage.getItem(productReference)) {
+      let currentProduct = JSON.parse(localStorage.getItem(productReference))
       let currentProductQuantity = currentProduct[0].quantity
       let productQuantityAdded = parseInt(currentProductQuantity) + parseInt(newProductQuantity)
       newItemJSON = {
-         key: productKey,
+         reference: productReference,
          id: productId,
          quantity: productQuantityAdded,
          color: productColorsList.value
       }
-      increaseItem(newItemJSON, cartList, productKey)
+      increaseItem(newItemJSON, cartList, productReference)
    } else {
-      increaseItem(newItemJSON, cartList, productKey)
+      increaseItem(newItemJSON, cartList, productReference)
    }
 }
 
-function increaseItem(newItemJSON, cartList, productKey){
+function increaseItem(newItemJSON, cartList, productReference){
    cartList.push(newItemJSON)
    newItem = JSON.stringify(cartList)
-   localStorage.setItem(productKey, newItem)
+   localStorage.setItem(productReference, newItem)
    console.log(localStorage) //#########
 }
 
