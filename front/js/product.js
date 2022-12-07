@@ -26,7 +26,7 @@ function addToCart() {
    let cartList = []
    let productQuantity = document.getElementById("quantity")
    let productColorsList = document.getElementById("colors")
-   let productReference = `${productId} ` + `${colors.value}`
+   let productReference = `${productId}` + " " + `${colors.value}`
    let newItemJSON = {
       reference: productReference,
       id: productId,

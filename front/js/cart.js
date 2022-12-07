@@ -33,13 +33,22 @@ fetch("http://localhost:3000/api/products/")
          }
 
          let modifierQuantity = document.getElementsByClassName("itemQuantity")
-         for (modifierToQuantity in modifierQuantity){
+         for (modifierToQuantity in modifierQuantity)
+         if (modifierQuantity.hasOwnProperty(modifierToQuantity)){
+            console.log(modifierQuantity[modifierToQuantity])
             modifierQuantity[modifierToQuantity].addEventListener("change", addModifierQuantity)
          }
 
+         let deletedProductCart = document.getElementsByClassName("deleteItem")
+         for (deletedProductToCart in deletedProductCart)
+         if (deletedProductCart.hasOwnProperty(deletedProductToCart)){
+            // console.log(deletedProductCart[deletedProductToCart])
+            deletedProductCart[deletedProductToCart].addEventListener("click", deletedProduct)
+         }
+
          inserTotalsHtml(quantityProductTotal, totalProductPrice)
-         console.log(quantityProductTotal) //#########
-         console.log(totalProductPrice) //#########
+         console.log("Voici la quantité TT du panier : " + quantityProductTotal) //#########
+         console.log("Voici le prix TT du panier : " + totalProductPrice) //#########
       });
 
 function inserProductHtml(cartProduct, referenceId, referenceColor, cartProductQuantity){
@@ -72,10 +81,22 @@ function inserTotalsHtml(quantityTotal, priceTotal){
    totalPrice.innerHTML += priceTotal
 }
 
-function addModifierQuantity(){
-   // Modifier le localstorage en faisant +/- 1
-   // Actualiser les totaux via une fonction (ou voir avec fonction inserTotalsHtml)
+function addModifierQuantity(e) {
+   const id = e.target.closest("article.cart__item").dataset["id"]
+   const color = e.target.closest("article.cart__item").dataset["color"]
+
+   // console.log(id, color)
+   let product = JSON.parse(localStorage[id + " " + color])
+   product[0].quantity = e.target.value
+   console.log(product)
 }
 
+function deletedProduct(e) {
+   const id = e.target.closest("article.cart__item").dataset["id"]
+   const color = e.target.closest("article.cart__item").dataset["color"]
 
+   // console.log(id, color)
+   delete localStorage[id + " " + color]
+   e.target.closest("article.cart__item").remove()
+}
 
