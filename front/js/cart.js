@@ -108,3 +108,84 @@ function deletedProduct(e) {
    productsCart(false)
 }
 
+
+
+
+// ****************** FORMULAIRE ****************
+document.forms[0].addEventListener('submit', function(e){
+   e.preventDefault()
+})
+
+function validForm(){
+   const ordered = {concact: {}, products: []}
+
+}
+
+function validFirstName(){
+   elt=document.forms[0].elements['firstName'];
+   if(elt.value != "") {
+     return true;
+   }
+   else {
+     alert("Veuillez saisir un prénom valide");
+     return false;
+   }
+ }
+function validLastName(){
+   elt=document.forms[0].elements['lastName'];
+   if(elt.value != "") {
+     return true;
+   }
+   else {
+     alert("Veuillez saisir un nom valide");
+     return false;
+   }
+ }
+function validAddress(){
+   elt=document.forms[0].elements['address'];
+   if(/^[A-Z]+$/.test(elt.value)) {
+     return true;
+   }
+   else {
+     alert("Veuillez saisir une addresse valide");
+     return false;
+   }
+ }
+function validCity(){
+   elt=document.forms[0].elements['city'];
+   if(elt.value != "") {
+     return true;
+   }
+   else {
+     alert("Veuillez saisir un nom de ville valide");
+     return false;
+   }
+ }
+function validEmail(){
+   elt=document.forms[0].elements['email'];
+   if(elt.value != "") {
+     return true;
+   }
+   else {
+     alert("Veuillez saisir un email valide");
+     return false;
+   }
+ }
+
+// var firstName = document.getElementById("firstName").value
+// console.log("Le prénom saisie est : " + firstName) //#########
+
+// var lastName = document.getElementById("lastName").value
+// console.log("Le nom saisie est : " + lastName) //#########
+
+// var address = document.getElementById("address").value
+// console.log("L'adresse saisie est : " + address) //#########
+
+// var city = document.getElementById("city").value
+// console.log("La ville saisie est : " + city) //#########
+
+// var email = document.getElementById("email").value
+// console.log("L'email saisie est : " + email) //#########
+
+
+
