@@ -112,18 +112,41 @@ function deletedProduct(e) {
 
 
 // ****************** FORMULAIRE ****************
+
 document.forms[0].addEventListener('submit', function(e){
    e.preventDefault()
+   validForm()
 })
 
-function validForm(){
-   const ordered = {concact: {}, products: []}
 
+function validForm(){
+   // const ordered = {concact: {}, products: []}
+   if (validFirstName() && validLastName() && validAddress() && validCity() && validEmail()) {
+      alert("La saisie du formulaire est correcte.")
+      const products = []
+      const concact = {
+         firstName: document.forms[0].firstName.value,
+         lastName: document.forms[0].lastName.value,
+         address: document.forms[0].address.value,
+         city: document.forms[0].city.value,
+         email: document.forms[0].email.value
+      }
+      for (product in localStorage)
+         if (localStorage.hasOwnProperty(product)) {
+            products.push(JSON.parse(localStorage[product])[0].id)
+         }
+      const ordered = { concact, products }
+      console.log(ordered)
+   } else {
+      alert("La saisie du formulaire est incorrecte.\nVeuillez recommencer.")
+   }
 }
 
 function validFirstName(){
    elt=document.forms[0].elements['firstName'];
-   if(elt.value != "") {
+   const alphabetical = /[_A-Za-z]/
+   // Regex qui permet la saisie alphabétique (lettres)
+   if(alphabetical.test(elt.value)) {
      return true;
    }
    else {
@@ -131,9 +154,12 @@ function validFirstName(){
      return false;
    }
  }
+
 function validLastName(){
    elt=document.forms[0].elements['lastName'];
-   if(elt.value != "") {
+   const alphabetical = /[_A-Za-z]/
+   // Regex qui permet la saisie alphabétique (lettres)
+   if(alphabetical.test(elt.value)) {
      return true;
    }
    else {
@@ -141,9 +167,13 @@ function validLastName(){
      return false;
    }
  }
+
 function validAddress(){
    elt=document.forms[0].elements['address'];
-   if(/^[A-Z]+$/.test(elt.value)) {
+   const alphanumericReg = /[_A-Za-z0-9]/
+   // Regex qui permet la saisie alphanumérique (chiffres et lettres)
+   if(alphanumericReg.test(elt.value)) {
+   // if(/^[A-Z]+$/.test(elt.value)) {
      return true;
    }
    else {
@@ -151,9 +181,13 @@ function validAddress(){
      return false;
    }
  }
+
 function validCity(){
    elt=document.forms[0].elements['city'];
-   if(elt.value != "") {
+   const alphanumericReg = /[_A-Za-z0-9]/
+   // Regex qui permet la saisie alphanumérique (chiffres et lettres)
+   if(alphanumericReg.test(elt.value)) {
+   // if(elt.value != "") {
      return true;
    }
    else {
@@ -161,9 +195,12 @@ function validCity(){
      return false;
    }
  }
+
 function validEmail(){
    elt=document.forms[0].elements['email'];
-   if(elt.value != "") {
+   const emailReg = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i)
+   // Regex pour vérifier un mail
+   if(emailReg.test(elt.value)) {
      return true;
    }
    else {
@@ -172,20 +209,6 @@ function validEmail(){
    }
  }
 
-// var firstName = document.getElementById("firstName").value
-// console.log("Le prénom saisie est : " + firstName) //#########
-
-// var lastName = document.getElementById("lastName").value
-// console.log("Le nom saisie est : " + lastName) //#########
-
-// var address = document.getElementById("address").value
-// console.log("L'adresse saisie est : " + address) //#########
-
-// var city = document.getElementById("city").value
-// console.log("La ville saisie est : " + city) //#########
-
-// var email = document.getElementById("email").value
-// console.log("L'email saisie est : " + email) //#########
 
 
 
