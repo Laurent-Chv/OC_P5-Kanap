@@ -116,15 +116,45 @@ function deletedProduct(e) {
 document.forms[0].addEventListener('submit', function(e){
    e.preventDefault()
    validForm()
-   forwardAdress()
 })
 
 
+// ****************** REDIRECTION VERS PAGE DE CONFIRMATION ****************
+//TODO: Envoyer le formulaire au backend
+//TODO: Récupèrer le numéro de confirmation
+
+
+
+async function sendForm(order) {
+   // let ordered = order
+
+   console.log("Voici la commande : " + JSON.stringify(order))
+
+   let response = await fetch('http://localhost:3000/api/order/', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json;charset=utf-8',
+         'Accept': 'application/json',
+      },
+      body: JSON.stringify(order)
+   });
+   console.log("Voici la commande : " + JSON.stringify(order))
+
+   let orderConfirmation = await (response.json())
+   alert("Message : " + orderConfirmation.message)
+   
+   alert("Vous allez être redirger vers la page de confirmation de commande.")
+   const redirectionAddress = "./confirmation.html?id=" + await orderConfirmation
+   location.href = redirectionAddress
+}
+
 function validForm() {
-   if (validFirstName() && validLastName() && validAddress() && validCity() && validEmail()) {
+   if(localStorage.length == 0){
+      alert("Attention : votre panier est vide !")
+   } else if (validFirstName() && validLastName() && validAddress() && validCity() && validEmail()) {
       // alert("La saisie du formulaire est correcte.")
       const products = []
-      const concact = {
+      const contact = {
          firstName: document.forms[0].firstName.value,
          lastName: document.forms[0].lastName.value,
          address: document.forms[0].address.value,
@@ -139,24 +169,12 @@ function validForm() {
          // alert("Voici le type d'un product : " + productInLocalStorage)
       }
 
-// CONDITION POUR VERIFIER LE TYPE de contact et product
-      // if ((typeof firstName) && (typeof lastName) && (typeof address) && (typeof city) && (typeof email) == "string"){
-      if ((typeof concact) && (typeof products) == "object"){
-
-      } else{
-         alert("Une erreur est survenue !\nVeuillez recommencer ultérieurement.")
-      }
-
       alert("La saisie du formulaire est correcte.")
-      const orderObject = { concact, products }
-      console.log(orderObject)
+      const orderObject = { contact, products }
+      // console.log(orderObject)
 
       sendForm(orderObject)
 
-      // ***************
-      //TODO: VERIFIER LES TYPES 
-      //TODO:  VOIR POUR empêcher de commander si le panier est vide ????!!
-      // **************
    } else {
       alert("La saisie du formulaire est incorrecte.\nVeuillez recommencer.")
    }
@@ -165,7 +183,7 @@ function validForm() {
 function validFirstName(){
    elt=document.forms[0].elements['firstName'];
    const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
-   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    if(alphabeticalReg.test(elt.value)) {
      return true;
    }
@@ -228,45 +246,5 @@ function validEmail(){
    }
  }
 
-// ****************** REDIRECTION VERS PAGE DE CONFIRMATION ****************
-//TODO: Envoyer le formulaire au backend
-//TODO: Récupèrer le numéro de confirmation
 
-
-// function redirection() {
-//    const redirectionAddress = "./confirmation.html"
-//    location.href = redirectionAddress
-// }
-
-function forwardAdress() {
-   // document.write("Vous allez être redirger vers la page de confirmation de commande dans 3 secondes.")
-   alert("Vous allez être redirger vers la page de confirmation de commande.")
-   const redirectionAddress = "./confirmation.html"
-   // location.href = redirectionAddress
-
-   // setTimeout(function (){
-   //    // redirection()
-   //    const redirectionAddress = "./confirmation.html"
-   //    location.href = redirectionAddress
-   // }, 3000)
-}
-
-
-function sendForm(order) {
-   // let ordered = order
-
-   let response = fetch('http://localhost:3000/api/products', {
-   // let response = await fetch('http://localhost:3000/api/products/', {
-      method: 'POST',
-      headers: {
-         'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify(order)
-   });
-   console.log("Voici la commande : " + JSON.stringify(order))
-
-   let orderConfirmation = response.json()
-   // let orderConfirmation = await (response.json())
-   alert("Message : " + orderConfirmation.message)
-}
 
