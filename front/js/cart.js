@@ -116,13 +116,13 @@ function deletedProduct(e) {
 document.forms[0].addEventListener('submit', function(e){
    e.preventDefault()
    validForm()
+   forwardAdress()
 })
 
 
-function validForm(){
-   // const ordered = {concact: {}, products: []}
+function validForm() {
    if (validFirstName() && validLastName() && validAddress() && validCity() && validEmail()) {
-      alert("La saisie du formulaire est correcte.")
+      // alert("La saisie du formulaire est correcte.")
       const products = []
       const concact = {
          firstName: document.forms[0].firstName.value,
@@ -132,11 +132,31 @@ function validForm(){
          email: document.forms[0].email.value
       }
       for (product in localStorage)
+         // var productInLocalStorage = localStorage.hasOwnProperty(product)
+      // if (productInLocalStorage && (typeof productInLocalStorage) == "string") {
          if (localStorage.hasOwnProperty(product)) {
-            products.push(JSON.parse(localStorage[product])[0].id)
-         }
-      const ordered = { concact, products }
-      console.log(ordered)
+         products.push(JSON.parse(localStorage[product])[0].id)
+         // alert("Voici le type d'un product : " + productInLocalStorage)
+      }
+
+// CONDITION POUR VERIFIER LE TYPE de contact et product
+      // if ((typeof firstName) && (typeof lastName) && (typeof address) && (typeof city) && (typeof email) == "string"){
+      if ((typeof concact) && (typeof products) == "object"){
+
+      } else{
+         alert("Une erreur est survenue !\nVeuillez recommencer ultérieurement.")
+      }
+
+      alert("La saisie du formulaire est correcte.")
+      const orderObject = { concact, products }
+      console.log(orderObject)
+
+      sendForm(orderObject)
+
+      // ***************
+      //TODO: VERIFIER LES TYPES 
+      //TODO:  VOIR POUR empêcher de commander si le panier est vide ????!!
+      // **************
    } else {
       alert("La saisie du formulaire est incorrecte.\nVeuillez recommencer.")
    }
@@ -144,9 +164,9 @@ function validForm(){
 
 function validFirstName(){
    elt=document.forms[0].elements['firstName'];
-   const alphabetical = /[_A-Za-z]/
-   // Regex qui permet la saisie alphabétique (lettres)
-   if(alphabetical.test(elt.value)) {
+   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   if(alphabeticalReg.test(elt.value)) {
      return true;
    }
    else {
@@ -157,9 +177,9 @@ function validFirstName(){
 
 function validLastName(){
    elt=document.forms[0].elements['lastName'];
-   const alphabetical = /[_A-Za-z]/
-   // Regex qui permet la saisie alphabétique (lettres)
-   if(alphabetical.test(elt.value)) {
+   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   if(alphabeticalReg.test(elt.value)) {
      return true;
    }
    else {
@@ -170,10 +190,10 @@ function validLastName(){
 
 function validAddress(){
    elt=document.forms[0].elements['address'];
-   const alphanumericReg = /[_A-Za-z0-9]/
-   // Regex qui permet la saisie alphanumérique (chiffres et lettres)
+
+   const alphanumericReg = new RegExp ("^((?:\\w|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), numériques, et les caractères de séparation suivant : le tiret et l'espace 
    if(alphanumericReg.test(elt.value)) {
-   // if(/^[A-Z]+$/.test(elt.value)) {
      return true;
    }
    else {
@@ -184,10 +204,9 @@ function validAddress(){
 
 function validCity(){
    elt=document.forms[0].elements['city'];
-   const alphanumericReg = /[_A-Za-z0-9]/
-   // Regex qui permet la saisie alphanumérique (chiffres et lettres)
-   if(alphanumericReg.test(elt.value)) {
-   // if(elt.value != "") {
+   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   if(alphabeticalReg.test(elt.value)) {
      return true;
    }
    else {
@@ -199,7 +218,7 @@ function validCity(){
 function validEmail(){
    elt=document.forms[0].elements['email'];
    const emailReg = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i)
-   // Regex pour vérifier un mail
+   //! Regex pour vérifier un email
    if(emailReg.test(elt.value)) {
      return true;
    }
@@ -209,6 +228,45 @@ function validEmail(){
    }
  }
 
+// ****************** REDIRECTION VERS PAGE DE CONFIRMATION ****************
+//TODO: Envoyer le formulaire au backend
+//TODO: Récupèrer le numéro de confirmation
 
 
+// function redirection() {
+//    const redirectionAddress = "./confirmation.html"
+//    location.href = redirectionAddress
+// }
+
+function forwardAdress() {
+   // document.write("Vous allez être redirger vers la page de confirmation de commande dans 3 secondes.")
+   alert("Vous allez être redirger vers la page de confirmation de commande.")
+   const redirectionAddress = "./confirmation.html"
+   // location.href = redirectionAddress
+
+   // setTimeout(function (){
+   //    // redirection()
+   //    const redirectionAddress = "./confirmation.html"
+   //    location.href = redirectionAddress
+   // }, 3000)
+}
+
+
+function sendForm(order) {
+   // let ordered = order
+
+   let response = fetch('http://localhost:3000/api/products', {
+   // let response = await fetch('http://localhost:3000/api/products/', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(order)
+   });
+   console.log("Voici la commande : " + JSON.stringify(order))
+
+   let orderConfirmation = response.json()
+   // let orderConfirmation = await (response.json())
+   alert("Message : " + orderConfirmation.message)
+}
 

@@ -1,28 +1,42 @@
+//? --------------------------
+//? ----- Récupérer l’ID du produit à afficher
+//? --------------------------
 
-
-
+//* ----- Permet de comprendre quel produit afficher sur la page Produit parmi ceux préssent dans l'API
 var url = new URL(window.location);
 var search_params = new URLSearchParams(url.search);
 if (search_params.has('id')) {
    var productId = search_params.get('id');
 }
 
+//? --------------------------
+//? ----- Insérer le produit et ses détails dans la page Produit
+//? --------------------------
+
+//* ----- Gestion de l'affichage dynamique des produits sur la page Produit
+// ----- On requête le serveur afin de récupérer le produit selon son ID
 fetch("http://localhost:3000/api/products/" + productId)
    .then(data => data.json())
    .then(jsonListProduct => {
+      // ----- On va afficher les données sur notre page product.html en faisant des interpolations de variables 
       document.querySelector(".item__img").innerHTML =
          `<img src="${jsonListProduct.imageUrl}" alt="${jsonListProduct.imageUrl}">`;
       title.innerHTML = jsonListProduct.name;
       price.innerHTML = jsonListProduct.price;
       description.innerHTML = jsonListProduct.description;
+      // ----- Permert de gérer l'affichage des différentes couleurs d'un produit en faisant une boucle sur la liste de données dans "colors"
       for (let color of jsonListProduct.colors) {
          colors.innerHTML +=
             `<option value="${color}">${color}</option>`
       }
    });
 
+//? --------------------------
+//? ----- Ajouter des produits dans le panier
+//? --------------------------
+
+//* ----- Fonction qui permet d'ajouter un produit au panier selon un ID et une couleur    
 function addToCart() {
-   // localStorage.clear() //#########
    let cartList = []
    let productQuantity = document.getElementById("quantity")
    let productColorsList = document.getElementById("colors")
