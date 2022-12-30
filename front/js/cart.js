@@ -1,4 +1,4 @@
-
+//TODO ****************** Gestion de la page panier ******************
 
 let cart = []
 productsCart()
@@ -111,7 +111,7 @@ function deletedProduct(e) {
 
 
 
-// ****************** FORMULAIRE ****************
+// ****************** FORMULAIRE ******************
 
 document.forms[0].addEventListener('submit', function(e){
    e.preventDefault()
@@ -119,18 +119,15 @@ document.forms[0].addEventListener('submit', function(e){
 })
 
 
-// ****************** REDIRECTION VERS PAGE DE CONFIRMATION ****************
+// ****************** REDIRECTION VERS PAGE DE CONFIRMATION ******************
 //TODO: Envoyer le formulaire au backend
 //TODO: Récupèrer le numéro de confirmation
 
 
 
 async function sendForm(order) {
-   // let ordered = order
 
-   console.log("Voici la commande : " + JSON.stringify(order))
-
-   let response = await fetch('http://localhost:3000/api/order/', {
+   let response = await fetch('http://localhost:3000/api/products/order/', {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json;charset=utf-8',
@@ -138,13 +135,11 @@ async function sendForm(order) {
       },
       body: JSON.stringify(order)
    });
-   console.log("Voici la commande : " + JSON.stringify(order))
 
    let orderConfirmation = await (response.json())
-   alert("Message : " + orderConfirmation.message)
-   
-   alert("Vous allez être redirger vers la page de confirmation de commande.")
-   const redirectionAddress = "./confirmation.html?id=" + await orderConfirmation
+
+   alert("Votre commande à été prise en compte !\nVous allez être rediriger vers la page de confirmation de commande.")
+   const redirectionAddress = "./confirmation.html?id=" + await orderConfirmation.orderId
    location.href = redirectionAddress
 }
 
@@ -180,6 +175,8 @@ function validForm() {
    }
 }
 
+// ****************** Fonctions de validations des champs du formulaire ******************
+
 function validFirstName(){
    elt=document.forms[0].elements['firstName'];
    const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
@@ -195,8 +192,8 @@ function validFirstName(){
 
 function validLastName(){
    elt=document.forms[0].elements['lastName'];
-   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
-   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    if(alphabeticalReg.test(elt.value)) {
      return true;
    }
@@ -208,9 +205,8 @@ function validLastName(){
 
 function validAddress(){
    elt=document.forms[0].elements['address'];
-
-   const alphanumericReg = new RegExp ("^((?:\\w|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
-   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), numériques, et les caractères de séparation suivant : le tiret et l'espace 
+   const alphanumericReg = new RegExp ("^((?:\\w|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), numériques, et les caractères de séparation suivant : les tirets et l'espace 
    if(alphanumericReg.test(elt.value)) {
      return true;
    }
@@ -222,8 +218,8 @@ function validAddress(){
 
 function validCity(){
    elt=document.forms[0].elements['city'];
-   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\- ](?![\\- ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
-   //! Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : le tiret et l'espace 
+   const alphabeticalReg = new RegExp ("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
+   // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    if(alphabeticalReg.test(elt.value)) {
      return true;
    }
@@ -236,7 +232,7 @@ function validCity(){
 function validEmail(){
    elt=document.forms[0].elements['email'];
    const emailReg = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i)
-   //! Regex pour vérifier un email
+   // Regex pour vérifier un email
    if(emailReg.test(elt.value)) {
      return true;
    }
