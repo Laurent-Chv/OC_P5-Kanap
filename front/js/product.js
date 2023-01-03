@@ -7,6 +7,7 @@
 //* Permet de récupérer l'identifiant produit et de le stocker dans une variable depuis l'URL
 var url = new URL(window.location)
 var search_params = new URLSearchParams(url.search)
+
 if (search_params.has('id')) { // Condition permettant de chercher s'il y a "id" dans l'URL et si tel est le cas, de stocker la valeur de celui-ci dans la variable "productId" 
    var productId = search_params.get('id')
 }
@@ -26,6 +27,7 @@ fetch("http://localhost:3000/api/products/" + productId)
       title.innerHTML = jsonListProduct.name
       price.innerHTML = jsonListProduct.price
       description.innerHTML = jsonListProduct.description
+
       for (let color of jsonListProduct.colors) { // Permet de gérer l'affichage des différentes couleurs d'un produit en faisant une boucle sur la liste de données dans "colors"
          colors.innerHTML +=
             `<option value="${color}">${color}</option>`
@@ -73,25 +75,25 @@ function addToCart() {
 }
 
 //* Fonction qui permet d'ajouter un produit au panier avec un message de confirmation
-function increaseItem(newItemJSON, cartList, productReference){
+function increaseItem(newItemJSON, cartList, productReference) {
    cartList.push(newItemJSON)
    newItem = JSON.stringify(cartList)
    localStorage.setItem(productReference, newItem)
    // Message de confirmation de l'ajout du/des produit(s) au panier avec demande de redirection vers le panier ou de poursuite des achats
    let validPorduct = confirm(`Le produit "${newItemJSON.name}" de couleur "${newItemJSON.color}" a été ajouté au panier avec succès !\n
    Voulez-vous aller au panier ? (Ok) Ou continué vos achats ? (Annuler)`)
-   if(validPorduct){ //* => Condition permettant la redirection ou non selon la saisie utilisateur Ok/Annuler pour "validPorduct"
-      location.href="./cart.html"
+   if (validPorduct) { //* => Condition permettant la redirection ou non selon la saisie utilisateur Ok/Annuler pour "validPorduct"
+      location.href = "./cart.html"
    }
 }
 
 //* Fonction qui permet de vérifier qu'une couleur et une quantité ont bien été saisie
-function checkInput(){
-   if(colors.value == ""){ // S'il n'y a pas de couleur saisie, on envoie un message d'alerte
-      alert("Veuillez choisisr une couleur")
+function checkInput() {
+   if (colors.value == "") { // S'il n'y a pas de couleur saisie, on envoie un message d'alerte
+      alert("Veuillez choissir une couleur")
       return false
-   } else if (1 > parseInt(quantity.value) || parseInt(quantity.value) > 100){ // S'il n'y a pas de quantité saisie comprise entre 1 et 100, on envoie un message d'alerte  
-      alert("Veuillez choisisr une quantité entre 1 et 100")
+   } else if (1 > parseInt(quantity.value) || parseInt(quantity.value) > 100) { // S'il n'y a pas de quantité saisie comprise entre 1 et 100, on envoie un message d'alerte  
+      alert("Veuillez choissir une quantité entre 1 et 100")
       return false
    } else { // Si aucune des deux conditions précédentes n'est vérifiées, on retourne "true"
       return true
