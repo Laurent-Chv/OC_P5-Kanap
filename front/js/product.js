@@ -38,7 +38,7 @@ fetch("http://localhost:3000/api/products/" + productId)
 //? Ajouter des produits dans le panier
 //? ************************************
 
-//* Fonction qui permet de créer ou d'actualiser la fiche du produit à ajouter au panier selon une clé de référence (ID + couleur) elle-même créée dans la fonction "productReference"
+//* Fonction qui permet de créer ou d'actualiser la fiche du produit à ajouter au panier selon une clé de référence (ID + couleur) elle-même créée dans la variable "productReference"
 function addToCart() {
    let cartList = []
    let productQuantity = document.getElementById("quantity")
@@ -74,7 +74,7 @@ function addToCart() {
    }
 }
 
-//* Fonction qui permet d'ajouter un produit au panier avec un message de confirmation
+//* Fonction qui permet d'ajouter un produit au panier avec un message de confirmation et une demande de redirection
 function increaseItem(newItemJSON, cartList, productReference) {
    cartList.push(newItemJSON)
    newItem = JSON.stringify(cartList)
