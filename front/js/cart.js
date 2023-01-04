@@ -11,7 +11,7 @@ productsCart()
 function productsCart(bool = true) {
    let quantityProductTotal = 0
    let totalProductPrice = 0
-   fetch("http://localhost:3000/api/products/") //! Requête de l'API afin d'avoir accès et d'utiliser les données produits de celle-ci
+   fetch("http://localhost:3000/api/products/") // Requête de l'API afin d'obtenir tous les produits (puis on ne conservera que ceux présent également dans le localstorage)
       .then(data => data.json())
       .then(jsonListProduct => {
 
@@ -31,24 +31,26 @@ function productsCart(bool = true) {
                      quantityProductTotal += parseInt(cartProductQuantity)
                      totalProductPrice += parseInt(cartProductPrice) * parseInt(cartProductQuantity)
                      cart.push(cartProduct)
-                     bool && inserProductHtml(cartProduct, referenceId, referenceColor, cartProductQuantity) //! le sens de "bool" ici ?
+                     bool && inserProductHtml(cartProduct, referenceId, referenceColor, cartProductQuantity) //! Selon la valeur true ou false de la variable "bool", cela permet l'exécution ou non de la fonction "inserProductHtml"
                   }
                }
             }
 
-         if (bool) { //! "bool" étant définit sur "true", cette condition permet de 
+         if (bool) { // Permet de gérer la modification de la quantité et la suppression d'un produit selon la valeur true/false de "bool"
+            // La variable "bool" est un paramètre de la fonction "productsCart" et est défini par défaut à true, cette condition est donc validée même sans passé de paramètre à l'appel cette fonction "productsCart" ligne 8
+            // Si on définit "bool" sur false et on passe à l'appel de la fonction "inserTotalsHtml"
 
             let modifierQuantity = document.getElementsByClassName("itemQuantity")
             for (modifierToQuantity in modifierQuantity) // Boucle sur chaque "input.itemQuantity" de la page
-               if (modifierQuantity.hasOwnProperty(modifierToQuantity)) { //! Si l'élément possède une classe "itemQuantity"
-                  // alors on appelle la fonction "addModifierQuantity" à chaque fois que le bouton "itemQuantity" subit une modification (donc qu'on modifie la quantité du produit)
+               if (modifierQuantity.hasOwnProperty(modifierToQuantity)) { // Permet de vérifier si l'élément possède une classe "itemQuantity" et de passer outre des propriétés qui ne sont pas des noeuds HTML tel que "length"
+                  // Si la condition est vraie, alors on appelle la fonction "addModifierQuantity" à chaque fois que le bouton "itemQuantity" subit une modification (donc qu'on modifie la quantité du produit)
                   modifierQuantity[modifierToQuantity].addEventListener("change", addModifierQuantity)
                }
 
             let deletedProductCart = document.getElementsByClassName("deleteItem")
             for (deletedProductToCart in deletedProductCart) // Boucle sur chaque "p.deleteItem" de la page
-               if (deletedProductCart.hasOwnProperty(deletedProductToCart)) { //! Si l'élément possède une classe "deleteItem"
-                  // alors on appelle la fonction "deletedProduct" lorsqu'on clique sur l'élément "Supprimer" de classe "deleteItem" (donc qu'on supprime un produit)
+               if (deletedProductCart.hasOwnProperty(deletedProductToCart)) { // Permet de vérifier si l'élément possède une classe "deleteItem" et de passer outre des propriétés qui ne sont pas des noeuds HTML tel que "length"
+                  // Si la condition est vraie, alors on appelle la fonction "deletedProduct" lorsqu'on clique sur l'élément "Supprimer" de classe "deleteItem" (donc qu'on supprime un produit)
                   deletedProductCart[deletedProductToCart].addEventListener("click", deletedProduct)
                }
          }
@@ -102,7 +104,7 @@ function addModifierQuantity(e) {
    product[0].quantity = e.target.value
    localStorage[id + "_" + color] = JSON.stringify(product)
 
-   productsCart(false) //! Pourquoi il renvoie "false"
+   productsCart(false) // On passe "false" en paramètre afin de ne pas exécuter la condition "if (bool)" à la ligne 39 et donc d'empêcher un comportement indésirable de la fonction "productsCart"
 }
 
 //* Fonction permettant de supprimer tout un produit (grâce à son identifiant et sa couleur) selon un élément cliqué
@@ -126,16 +128,6 @@ document.forms[0].addEventListener('submit', function(e){
    validOrder()
 })
 
-//! => Dans l'étape 11, il est demandé à ce que le numéro de commande puisse être affiché, celui-ci ne devant pas être conservé/stocké.
-//! Est-ce qu'en faisant appel aux fonctions "sendOrder" et "moveToConfirmation" cela convient ?
-
-//* Fonction mermettant de rediriger l'utilisateur vers la page de Confirmation en passant le numéro de commande dans l’URL
-async function moveToConfirmation(orderNumber){
-   alert("Félicitation, votre commande a bien été prise en compte !\nVous allez être redirigé vers la page de confirmation de commande.")
-   const redirectionAddress = "./confirmation.html?id=" + (await (orderNumber.json())).orderId
-   location.href = redirectionAddress
-}
-
 //* Fonction permettant de passer/envoyer la commande et de récupérer le numéro de commande
 async function sendOrder(order) {
    let response = await fetch('http://localhost:3000/api/products/order/', {
@@ -147,16 +139,9 @@ async function sendOrder(order) {
       body: JSON.stringify(order)
    });
 
-   moveToConfirmation (response)
-   // let orderConfirmation = await (response.json())
-   // moveToConfirmation (await (response.json()))
-   // let orderConfirmation = await (response.json())
-   // moveToConfirmation (orderConfirmation)
-
-   //! Ou alors il vaut mieux privilégier cette manière et donc de ne pas faire appel à la fonction "moveToConfirmation"
-   // alert("Félicitation, votre commande a bien été prise en compte !\nVous allez être redirigé vers la page de confirmation de commande.")
-   // const redirectionAddress = "./confirmation.html?id=" + (await (response.json())).orderId
-   // location.href = redirectionAddress
+   alert("Félicitation, votre commande a bien été prise en compte !\nVous allez être redirigé vers la page de confirmation de commande.")
+   const redirectionAddress = "./confirmation.html?id=" + (await (response.json())).orderId
+   location.href = redirectionAddress
 }
 
 //* Fonction permettant de récupérer et de vérifier la conformité de la commande avant de la valider
