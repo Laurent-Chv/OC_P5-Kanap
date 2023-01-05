@@ -11,7 +11,7 @@ class Product {
    }
 }
 
-//* Cette classe met les produits sous forme de liste de produits
+//* Cette classe gère les produits sous forme d'objet
 class ProductManager {
    constructor(listProduct) {
       this.listProduct = listProduct

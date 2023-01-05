@@ -60,6 +60,10 @@ function addToCart() {
          let currentProduct = JSON.parse(localStorage.getItem(productReference))
          let currentProductQuantity = currentProduct[0].quantity
          let productQuantityAdded = parseInt(currentProductQuantity) + parseInt(newProductQuantity)
+         if (productQuantityAdded > 100) { // Empêche de dépasser la quantité maximale a ajouter dans le panier
+            alert("La quantité pouvant être ajoutée est limitée à 100 unités pour un produit")
+         }
+         productQuantityAdded = productQuantityAdded > 100 ? 100 : productQuantityAdded
          newItemJSON = {
             reference: productReference,
             id: productId,
@@ -79,23 +83,22 @@ function increaseItem(newItemJSON, cartList, productReference) {
    cartList.push(newItemJSON)
    newItem = JSON.stringify(cartList)
    localStorage.setItem(productReference, newItem)
-   // Message de confirmation de l'ajout du/des produit(s) au panier avec demande de redirection vers le panier ou de poursuite des achats
    let validPorduct = confirm(`Le produit "${newItemJSON.name}" de couleur "${newItemJSON.color}" a été ajouté au panier avec succès !\n
    Voulez-vous aller au panier ? (Ok) Ou continué vos achats ? (Annuler)`)
-   if (validPorduct) { //* => Condition permettant la redirection ou non selon la saisie utilisateur Ok/Annuler pour "validPorduct"
+   if (validPorduct) { // Condition permettant la redirection ou non selon la saisie utilisateur Ok/Annuler pour "validPorduct"
       location.href = "./cart.html"
    }
 }
 
 //* Fonction qui permet de vérifier qu'une couleur et une quantité ont bien été saisie
 function checkInput() {
-   if (colors.value == "") { // S'il n'y a pas de couleur saisie, on envoie un message d'alerte
-      alert("Veuillez choissir une couleur")
+   if (colors.value == "") { // Permet de vérifier la saisie couleur et quantité 
+      alert("Veuillez choisir une couleur")
       return false
-   } else if (1 > parseInt(quantity.value) || parseInt(quantity.value) > 100) { // S'il n'y a pas de quantité saisie comprise entre 1 et 100, on envoie un message d'alerte  
-      alert("Veuillez choissir une quantité entre 1 et 100")
+   } else if (1 > parseInt(quantity.value) || parseInt(quantity.value) > 100) {
+      alert("Veuillez choisir une quantité entre 1 et 100")
       return false
-   } else { // Si aucune des deux conditions précédentes n'est vérifiées, on retourne "true"
+   } else {
       return true
    }
 }

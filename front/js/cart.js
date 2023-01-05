@@ -7,7 +7,7 @@
 let cart = []
 productsCart()
 
-//* Fonction qui permet de récupérer la liste des articles précédemment ajoutés au Panier afin de permettre leur affichage ainsi que la gestion des quantité et la suppression
+//* Fonction qui permet de récupérer la liste des articles précédemment ajoutés au Panier afin de permettre leur affichage ainsi que la gestion des quantités et la suppression
 function productsCart(bool = true) {
    let quantityProductTotal = 0
    let totalProductPrice = 0
@@ -31,7 +31,7 @@ function productsCart(bool = true) {
                      quantityProductTotal += parseInt(cartProductQuantity)
                      totalProductPrice += parseInt(cartProductPrice) * parseInt(cartProductQuantity)
                      cart.push(cartProduct)
-                     bool && inserProductHtml(cartProduct, referenceId, referenceColor, cartProductQuantity) //! Selon la valeur true ou false de la variable "bool", cela permet l'exécution ou non de la fonction "inserProductHtml"
+                     bool && inserProductHtml(cartProduct, referenceId, referenceColor, cartProductQuantity)
                   }
                }
             }
@@ -101,6 +101,11 @@ function addModifierQuantity(e) {
    const color = e.target.closest("article.cart__item").dataset["color"]
    let product = JSON.parse(localStorage[id + "_" + color])
 
+   if (e.target.value > 100) { // Limite la quantité produit dans le panier
+      e.target.value = product[0].quantity
+      alert("Désolé, la quantité est limitée à 100 unités")
+   }
+
    product[0].quantity = e.target.value
    localStorage[id + "_" + color] = JSON.stringify(product)
 
@@ -141,6 +146,7 @@ async function sendOrder(order) {
 
    alert("Félicitation, votre commande a bien été prise en compte !\nVous allez être redirigé vers la page de confirmation de commande.")
    const redirectionAddress = "./confirmation.html?id=" + (await (response.json())).orderId
+   localStorage.clear()
    location.href = redirectionAddress
 }
 
@@ -180,11 +186,12 @@ function validFirstName() {
    // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    const alphabeticalReg = new RegExp("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
    // Condition permettant de tester la saisie utilisateur selon les critères de la RegEx
-   if (alphabeticalReg.test(elt.value)) { // Si la saisie utilisateur répond aux critères de la RegEx, alors la saisie est valide, donc on retourne "true"
+   if (alphabeticalReg.test(elt.value)) {
+      firstNameErrorMsg.innerHTML = ""
       return true;
    }
-   else { // Si la saisie utilisateur ne répond pas aux critères de la RegEx, alors la saisie n'est pas valide, on affiche un message d'alerte et on retourne "false"
-      alert("Veuillez saisir un prénom valide");
+   else {
+      firstNameErrorMsg.innerHTML = "Veuillez saisir un prénom valide"
       return false;
    }
 }
@@ -195,11 +202,12 @@ function validLastName() {
    // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    const alphabeticalReg = new RegExp("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
    // Condition permettant de tester la saisie utilisateur selon les critères de la RegEx
-   if (alphabeticalReg.test(elt.value)) { // Si la saisie utilisateur répond aux critères de la RegEx, alors la saisie est valide, donc on retourne "true"
+   if (alphabeticalReg.test(elt.value)) {
+      lastNameErrorMsg.innerHTML = ""
       return true;
    }
-   else { // Si la saisie utilisateur ne répond pas aux critères de la RegEx, alors la saisie n'est pas valide, on affiche un message d'alerte et on retourne "false"
-      alert("Veuillez saisir un nom valide");
+   else {
+      lastNameErrorMsg.innerHTML = "Veuillez saisir un nom valide"
       return false;
    }
 }
@@ -210,11 +218,12 @@ function validAddress() {
    // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), numériques, et les caractères de séparation suivant : les tirets et l'espace 
    const alphanumericReg = new RegExp("^((?:\\w|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
    // Condition permettant de tester la saisie utilisateur selon les critères de la RegEx
-   if (alphanumericReg.test(elt.value)) { // Si la saisie utilisateur répond aux critères de la RegEx, alors la saisie est valide, donc on retourne "true"
+   if (alphanumericReg.test(elt.value)) { 
+      addressErrorMsg.innerHTML = ""
       return true;
    }
-   else { // Si la saisie utilisateur ne répond pas aux critères de la RegEx, alors la saisie n'est pas valide, on affiche un message d'alerte et on retourne "false"
-      alert("Veuillez saisir une addresse valide");
+   else {
+      addressErrorMsg.innerHTML = "Veuillez saisir une addresse valide"
       return false;
    }
 }
@@ -225,11 +234,12 @@ function validCity() {
    // Regex qui accepte tous les caractères alphabétiques (avec ou sans accents), et les caractères de séparation suivant : les tirets et l'espace 
    const alphabeticalReg = new RegExp("^((?:([A-Za-z])|[\\-_ ](?![\\-_ ])|[\\u00C0\\u00C1\\u00C2\\u00C3\\u00C4\\u00C5\\u00C6\\u00C7\\u00C8\\u00C9\\u00CA\\u00CB\\u00CC\\u00CD\\u00CE\\u00CF\\u00D0\\u00D1\\u00D2\\u00D3\\u00D4\\u00D5\\u00D6\\u00D8\\u00D9\\u00DA\\u00DB\\u00DC\\u00DD\\u00DF\\u00E0\\u00E1\\u00E2\\u00E3\\u00E4\\u00E5\\u00E6\\u00E7\\u00E8\\u00E9\\u00EA\\u00EB\\u00EC\\u00ED\\u00EE\\u00EF\\u00F0\\u00F1\\u00F2\\u00F3\\u00F4\\u00F5\\u00F6\\u00F9\\u00FA\\u00FB\\u00FC\\u00FD\\u00FF\\u0153])+)$", "i")
    // Condition permettant de tester la saisie utilisateur selon les critères de la RegEx
-   if (alphabeticalReg.test(elt.value)) { // Si la saisie utilisateur répond aux critères de la RegEx, alors la saisie est valide, donc on retourne "true"
+   if (alphabeticalReg.test(elt.value)) { 
+      cityErrorMsg.innerHTML = ""
       return true;
    }
-   else { // Si la saisie utilisateur ne répond pas aux critères de la RegEx, alors la saisie n'est pas valide, on affiche un message d'alerte et on retourne "false"
-      alert("Veuillez saisir un nom de ville valide");
+   else {
+      cityErrorMsg.innerHTML = "Veuillez saisir un nom de ville valide"
       return false;
    }
 }
@@ -240,11 +250,12 @@ function validEmail() {
    // Regex pour vérifier un email
    const emailReg = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i)
    // Condition permettant de tester la saisie utilisateur selon les critères de la RegEx
-   if (emailReg.test(elt.value)) { // Si la saisie utilisateur répond aux critères de la RegEx, alors la saisie est valide, donc on retourne "true"
+   if (emailReg.test(elt.value)) { 
+      emailErrorMsg.innerHTML = ""
       return true;
    }
-   else { // Si la saisie utilisateur ne répond pas aux critères de la RegEx, alors la saisie n'est pas valide, on affiche un message d'alerte et on retourne "false"
-      alert("Veuillez saisir un email valide");
+   else { 
+      emailErrorMsg.innerHTML = "Veuillez saisir un email valide"
       return false;
    }
 }
